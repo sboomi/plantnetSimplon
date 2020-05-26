@@ -10,8 +10,14 @@
     <h1>Mais quelle-est cette fleur ?</h1>
     <p>Montre-moi ta photo de fleur, je te dirai de quoi il s'agit... 🌹</p>
 
-    <form>
-        
+    {% if img_flower %}
+    <p>{{img_flower}}</p>
+    {% endif %}
+
+    <form action="{{url_for('show_flower')}}" method="post">
+        <p><label for="imgflower">Choisissez vos images :</label></br>
+        <input type="file" name="imgflower" id="imgflower" multiple></p>
+        <p><button type="submit">Envoyer</button></p>
     </form>
 </body>
 </html>
