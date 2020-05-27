@@ -4,17 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-    <title>Plantnet</title>
-
-    {{ dropzone.load() }}
-    {{ dropzone.style('border: 2px dashed #0087F7; margin: 10%; min-height: 400px;') }}
+    <title>Plantnet | Résultats</title>
 </head>
 <body>
-    <h1>Mais quelle-est cette fleur ?</h1>
-    <p>Montre-moi ta photo de fleur, je te dirai de quoi il s'agit... 🌹</p>
-
-    {{ dropzone.create(action_view='index') }}
-
-
+    <h1>Voilà le résultat !</h1>
+    <a href="{{ url_for('index') }}">Back</a><p>
+        <ul>
+        {% for file_url in file_urls %}
+            <li><img style="height: 150px" src="{{ file_url }}"></li>
+        {% endfor %}
+        </ul>
 </body>
+
 </html>
