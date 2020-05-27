@@ -118,4 +118,7 @@ dmypy.json
 # Visual Studio Code
 .vscode/
 
+# The raw data folder
+training_data/
+
 # End of https://www.gitignore.io/api/flask
