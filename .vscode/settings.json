@@ -1,3 +1,4 @@
 {
-    "python.pythonPath": "d:\\shadi\\PythonProjects\\envs\\plantnet_simplon\\Scripts\\python.exe"
+    "python.pythonPath": "d:\\shadi\\PythonProjects\\envs\\plantnet_simplon\\Scripts\\python.exe",
+    "git.ignoreLimitWarning": true
 }

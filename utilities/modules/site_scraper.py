@@ -57,7 +57,7 @@ browser = webdriver.Firefox()
 for name, url in FLOWER_URL.items():
 
     #Crée un nouveau répertoire pour stocker les images si il n'existe pas
-    dirname = "raw/" + name.replace(" ", "_").replace(".","")
+    dirname = "../training_data/raw/" + name.replace(" ", "_").replace(".","")
     if not os.path.exists(dirname):
         os.makedirs(dirname)
 
