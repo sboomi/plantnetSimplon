@@ -1,4 +1,5 @@
 import os
+
 from flask import Flask, render_template, request, redirect, session, url_for
 from flask_dropzone import Dropzone
 from flask_uploads import UploadSet, configure_uploads, IMAGES, patch_request_class
