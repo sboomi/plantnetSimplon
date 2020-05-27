@@ -28,12 +28,12 @@ https://medium.com/@dustindavignon/upload-multiple-images-with-python-flask-and-
 """
 Configuration de l'application
 """
-app.config['DROPZONE_UPLOAD_MULTIPLE'] = True
-app.config['DROPZONE_ALLOWED_FILE_CUSTOM'] = True
-app.config['DROPZONE_ALLOWED_FILE_TYPE'] = 'image/*'
-app.config['DROPZONE_REDIRECT_VIEW'] = 'results'
+app.config['DROPZONE_UPLOAD_MULTIPLE'] = True #Permet de lâcher plusieurs images
+app.config['DROPZONE_ALLOWED_FILE_CUSTOM'] = True 
+app.config['DROPZONE_ALLOWED_FILE_TYPE'] = 'image/*' #Ne tolère que les images
+app.config['DROPZONE_REDIRECT_VIEW'] = 'results' #Renvoie les résultats sur la page
 
-app.config['UPLOADED_PHOTOS_DEST'] = os.getcwd() + '/uploads'
+app.config['UPLOADED_PHOTOS_DEST'] = os.getcwd() + '/uploads' #Stocke les images dans '/uploads'
 
 app.config['SECRET_KEY'] = 'plantnet'
 
@@ -42,9 +42,9 @@ app.config['SECRET_KEY'] = 'plantnet'
 Variables globales
 """
 
-photos = UploadSet('photos', IMAGES)
-configure_uploads(app, photos)
-patch_request_class(app) 
+photos = UploadSet('photos', IMAGES) #Ensemble des images avec extension spécifiée
+configure_uploads(app, photos) #Stocke la configuration des images dans l'application
+patch_request_class(app) #Limite la taille des images selon 'MAX_CONTENT_LENGTH'
 
 
 """
@@ -54,39 +54,40 @@ Fonctions de l'application
 @app.route('/', methods=['GET', 'POST'])
 def index():
     
-    # set session for image results
+    # Installe une session dans l'application si elle n'existe pas
     if "file_urls" not in session:
         session['file_urls'] = []
-    # list to hold our uploaded image urls
+    # file_urls = stocke les URLS des images de la session
+    # Liste vide si ça commence
     file_urls = session['file_urls']
-    # handle image upload from Dropzone
+    # Gère les images uploadées sur la dropzone
     if request.method == 'POST':
-        file_obj = request.files
+        file_obj = request.files #Prend tous les fichiers chargés
         for f in file_obj:
             file = request.files.get(f)
             
-            # save the file with to our photos folder
+            # sauvegarde le fichier 
             filename = photos.save(
                 file,
                 name=file.filename    
             )
-            # append image urls
+            # Stocke dans la liste
             file_urls.append(photos.url(filename))
             
         session['file_urls'] = file_urls
         return "uploading..."
-    # return dropzone template on GET request    
+    # Renvoie à la page avec la dropzone   
     return render_template('index.html')
 
 
 @app.route('/results')
 def results():
     
-    # redirect to home if no images to display
+    # Redirige sur le menu principal si il n'y aucune image
     if "file_urls" not in session or session['file_urls'] == []:
         return redirect(url_for('index'))
         
-    # set the file_urls and remove the session variable
+    # Règle la variable file_urls et retire la session en cours
     file_urls = session['file_urls']
     session.pop('file_urls', None)
     
