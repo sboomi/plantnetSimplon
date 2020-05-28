@@ -18,7 +18,7 @@ from PIL import Image
 # Helper function to grayscale an image
 def rgb2gray(rgb_image):
     # Separate the RGB channels
-    r, g, b = rgb[:,:,0], rgb[:,:,1], rgb[:,:,2]
+    r, g, b = rgb_image[:,:,0], rgb[:,:,1], rgb[:,:,2]
     # Transform every pixel to gray
     gray_image = 0.2989 * r + 0.5870 * g + 0.1140 * b
 
@@ -43,31 +43,32 @@ for root, folders, files in os.walk(src_folder):
             file_path = os.path.join(root,sub_folder, file_name)
             print("reading " + file_path)
             image = Image.open(file_path)
+            gray_image = image.convert('L')
             # Create a gray version and save it
-            gray_image = rgb2gray(image)
+            #gray_image = rgb2gray(image)
             save_as = os.path.join(save_folder, file_name)
             print("writing " + save_as)
             gray_image.save(save_as)
 
-# Create a new figure
-fig = plt.figure(figsize=(12,12))
+# # Create a new figure
+# fig = plt.figure(figsize=(12,12))
 
-# loop through the subfolders in the input directory
-image_num = 0
-for root, folders, filenames in os.walk(src_folder):
-    for folder in folders:
-        # Get the first image in the subfolder and add it to a plot that has two columns and row for each folder
-        file = os.listdir(os.path.join(root,folder))[0]
-        src_file = os.path.join(src_folder,folder, file)
-        src_image = Image.open(src_file)
-        image_num += 1
-        a=fig.add_subplot(len(folders), 2, image_num)
-        imgplot = plt.imshow(src_image)
-        a.set_title(folder)
-        # The next image is the grayscaled counterpart - load and plot it
-        gray_file = os.path.join(train_folder,folder, file)
-        gray_image = Image.open(gray_file)
-        image_num += 1
-        b=fig.add_subplot(len(folders), 2, image_num)
-        imgplot = plt.imshow(gray_image)
-        b.set_title('grayscale ' + folder)
+# # loop through the subfolders in the input directory
+# image_num = 0
+# for root, folders, filenames in os.walk(src_folder):
+#     for folder in folders:
+#         # Get the first image in the subfolder and add it to a plot that has two columns and row for each folder
+#         file = os.listdir(os.path.join(root,folder))[0]
+#         src_file = os.path.join(src_folder,folder, file)
+#         src_image = Image.open(src_file)
+#         image_num += 1
+#         a=fig.add_subplot(len(folders), 2, image_num)
+#         imgplot = plt.imshow(src_image)
+#         a.set_title(folder)
+#         # The next image is the grayscaled counterpart - load and plot it
+#         gray_file = os.path.join(train_folder,folder, file)
+#         gray_image = Image.open(gray_file)
+#         image_num += 1
+#         b=fig.add_subplot(len(folders), 2, image_num)
+#         imgplot = plt.imshow(gray_image)
+#         b.set_title('grayscale ' + folder)
