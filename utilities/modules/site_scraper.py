@@ -16,6 +16,8 @@ Scraping du site : https://identify.plantnet.org/explo/salad/
 On s'intéresse aux espèces stockées dans la variable FLOWER_URL. Le script
 va prendre chacune de ces URL et va stocker toutes les images de prévisualisation
 dans le dossier correspondant.
+
+Note: on peut toujours utiliser du multiprocessing pour chaque URL avec concurrent.futures
 """
 
 FLOWER_URL = {
