@@ -7,12 +7,18 @@
     <title>Plantnet | Résultats</title>
 </head>
 <body>
-    <h1>Voilà le résultat !</h1>
+    <h1 class="text-center">Voilà le résultat !</h1>
     <a href="{{ url_for('index') }}">Back</a><p>
         <ul>
         {% for file_url in file_urls %}
             <li><img style="height: 150px" src="{{ file_url }}"></li>
         {% endfor %}
+        </ul>
+
+        <ul>
+            {% for result in analysis_results %}
+                <li>{{result}}</li>
+            {% endfor %}
         </ul>
 </body>
 
