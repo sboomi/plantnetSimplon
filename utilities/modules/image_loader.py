@@ -27,7 +27,6 @@ def prep_data (folder, grayscale=False):
                 if grayscale==True:
                     img = img.convert("L")
                 img = np.asarray(img)
-                dims = (img.shape[0], img.shape[1])
                 # The image array is a multidimensional numpy array
                 # - flatten it to a single array of pixel values for scikit-learn
                 # - and add it to the list of features
@@ -40,4 +39,4 @@ def prep_data (folder, grayscale=False):
     # Convert the list of features into a numpy array
     features = np.array(features)
     
-    return features, labels, classnames, dims
+    return features, labels, classnames

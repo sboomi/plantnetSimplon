@@ -1,8 +1,10 @@
 import pickle
 
-import modules.remove_bg as nobg
-import modules.image_loader as il
-#import ..directories
+from sklearn.preprocessing import StandardScaler     
+from sklearn.decomposition import PCA
+
+import utilities.modules.remove_bg as nobg
+import utilities.modules.image_loader as il
 
 """
 Fonction qui appelle les imges contenues dans le dossier /uploads et les fait passer
@@ -10,18 +12,28 @@ dans un algorithme de classification.
 """
 
 ROOT_DIR = '../'
-UPLOADS_FOLDER = f"{ROOT_DIR}/uploads"
-TEST_FOLDER = f"{ROOT_DIR}/uploads/training"
+UPLOADS_FOLDER = f"{ROOT_DIR}uploads"
+TEST_FOLDER = f"{ROOT_DIR}uploads/training"
 
 #A changer en fonction du modèle final
 MODEL = "model.pkl"
+
+def reduce_features(X, n):
+    pca = PCA(n_components=n)
+    scaler = StandardScaler().fit(X)
+    Z = scaler.transform(X)
+    pca.fit(Z)
+    return pca.transform(Z)
 
 def analyze(file_urls):
 
     #Preprocessing
     ## Remove background
     nobg.img_process(UPLOADS_FOLDER, TEST_FOLDER)
-    X, y, y_names, im_dims =il.prep_data(TEST_FOLDER)
+    X, y, y_names =il.prep_data(TEST_FOLDER)
+
+    #Optional: use PCA
+    #X = reduce_features(X, 0.77)
 
     #Classifier
     # Comes with a trained classifier
