@@ -109,8 +109,10 @@ def results():
 
     analysis_results = session['analysis_results']
     session.pop('analysis_results', None)
+
+    dict_result = {file_urls[i]: analysis_results[i] for i in range(len(file_urls)) }
     
-    return render_template('results.html', file_urls=file_urls, analysis_results=analysis_results)
+    return render_template('results.html', dict_result=dict_result)
 
 # Active le debug
 if __name__ == "__main__":
