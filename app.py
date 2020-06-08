@@ -94,15 +94,15 @@ def interprocessing():
 
 
 
-
-
 @app.route('/results')
 def results():
     
     # Redirige sur le menu principal si il n'y aucune image
     if "file_urls" not in session or session['file_urls'] == []:
         return redirect(url_for('index'))
-        
+
+    print("Processing pictures.")   
+    interprocessing()
     # Règle la variable file_urls et retire la session en cours
     file_urls = session['file_urls']
     session.pop('file_urls', None)
