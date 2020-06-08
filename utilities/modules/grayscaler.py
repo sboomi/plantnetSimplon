@@ -11,9 +11,13 @@ import shutil
 import numpy as np
 import matplotlib.pyplot as plt
 from PIL import Image
-import directories
 
 import concurrent.futures
+
+ROOT_DIR = "../.."
+
+SRC_FOLDER = f"{ROOT_DIR}/utilities/training_data/raw"
+TRAIN_FOLDER = f"{ROOT_DIR}/utilities/training_data/training"
 
 def grayscale_img_folder(sub_folder):
     print('processing folder ' + sub_folder)
@@ -53,4 +57,4 @@ def main(src_folder="../training_data/raw",train_folder="../training_data/traini
     
 
 if __name__=='__main__':
-    main(directories.SRC_FOLDER, directories.TRAIN_FOLDER)
+    main(SRC_FOLDER, TRAIN_FOLDER)

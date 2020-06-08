@@ -3,10 +3,14 @@ import os
 import shutil
 import numpy as np
 
-import directories
 
-src_folder = directories.SRC_FOLDER
-train_folder = directories.TRAIN_FOLDER_NO_BG
+ROOT_DIR = "../.."
+
+SRC_FOLDER = f"{ROOT_DIR}/utilities/training_data/raw"
+TRAIN_FOLDER_NO_BG = f"{ROOT_DIR}/utilities/training_data/training_no_bg"
+
+src_folder = SRC_FOLDER
+train_folder = TRAIN_FOLDER_NO_BG
 
 def remove_background(image_rgb, start_x=0, start_y=0, width=150, height=150):
     # Convert to RGB
@@ -33,23 +37,24 @@ def remove_background(image_rgb, start_x=0, start_y=0, width=150, height=150):
     return image_rgb_nobg
     
 # Loop through each subfolder in the input folder
-for root, folders, files in os.walk(src_folder):
-    for sub_folder in folders:
-        print('processing folder ' + sub_folder)
-        # Create a matching subfolder in the output dir
-        save_folder = os.path.join(train_folder,sub_folder)
-        if not os.path.exists(save_folder):
-            os.makedirs(save_folder)
-        # Loop through the files in the subfolder
-        file_names = os.listdir(os.path.join(root,sub_folder))
-        for file_name in file_names:
-            # Open the file
-            file_path = os.path.join(root,sub_folder, file_name)
-#             print("reading " + file_path)
-            # Create a gray version and save it
-            image_rgb = cv2.imread(file_path)
-            image_rgb_nobg = remove_background(image_rgb, 23, 23, 110, 125)
-            save_as = os.path.join(save_folder, file_name)
-            cv2.imwrite(save_as, image_rgb_nobg)
+def img_process(src_folder=SRC_FOLDER, train_folder=TRAIN_FOLDER_NO_BG):
+    for root, folders, files in os.walk(src_folder):
+        for sub_folder in folders:
+            print('processing folder ' + sub_folder)
+            # Create a matching subfolder in the output dir
+            save_folder = os.path.join(train_folder,sub_folder)
+            if not os.path.exists(save_folder):
+                os.makedirs(save_folder)
+            # Loop through the files in the subfolder
+            file_names = os.listdir(os.path.join(root,sub_folder))
+            for file_name in file_names:
+                # Open the file
+                file_path = os.path.join(root,sub_folder, file_name)
+#               print("reading " + file_path)
+                # Create a gray version and save it
+                image_rgb = cv2.imread(file_path)
+                image_rgb_nobg = remove_background(image_rgb, 23, 23, 110, 125)
+                save_as = os.path.join(save_folder, file_name)
+                cv2.imwrite(save_as, image_rgb_nobg)
 #             print("writing " + save_as)
 #             image_rgb_nobg.save(save_as)
