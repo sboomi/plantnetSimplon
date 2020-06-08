@@ -8,4 +8,4 @@ L'application permet à l'utilisateur de déposer des images. L'application fait
 
 ## Notebooks
 
-Les notebooks dans l'application détaillent le procédé.
+Les notebooks dans l'application détaillent le procédé. Ils racontent les difficultés encontrées lors de la création du modèle et l'obtention des données et ce qu'on pourrait faire pour améliorer la classification.
