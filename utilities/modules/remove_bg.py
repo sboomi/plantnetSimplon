@@ -58,3 +58,18 @@ def img_process(src_folder=SRC_FOLDER, train_folder=TRAIN_FOLDER_NO_BG):
                 cv2.imwrite(save_as, image_rgb_nobg)
 #             print("writing " + save_as)
 #             image_rgb_nobg.save(save_as)
+
+def dump_process(src_folder, train_folder):
+    list_img = os.listdir(src_folder)
+    save_folder = os.path.join(train_folder,sub_folder)
+    if not os.path.exists(save_folder):
+        os.makedirs(save_folder)
+    for file_name in list_img:
+        # Open the file
+        file_path = os.path.join(src_folder, file_name)
+#       print("reading " + file_path)
+        # Create a gray version and save it
+        image_rgb = cv2.imread(file_path)
+        image_rgb_nobg = remove_background(image_rgb, 23, 23, 110, 125)
+        save_as = os.path.join(save_folder, file_name)
+        cv2.imwrite(save_as, image_rgb_nobg)

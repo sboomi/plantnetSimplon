@@ -30,7 +30,7 @@ def analyze(file_urls):
 
     #Preprocessing
     ## Remove background
-    nobg.img_process(UPLOADS_FOLDER, TEST_FOLDER)
+    nobg.dump_process(UPLOADS_FOLDER, TEST_FOLDER)
     X =il.get_dump(TEST_FOLDER)
     #Get available classnames
     _, y, y_names = il.prep_data(SRC_FOLDER)
