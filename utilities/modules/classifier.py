@@ -1,44 +1,73 @@
-def prep_data (folder):
-    # iterate through folders, assembling feature, label, and classname data objects
-    import os
-    import numpy as np
-    import matplotlib.pyplot as plt
-
-    class_id = 0
-    features = []
-    labels = np.array([])
-    classnames = []
-    for root, dirs, filenames in os.walk(folder):
-        for d in sorted(dirs):
-            print("Reading data from", d)
-            # use the folder name as the class name for this label
-            classnames.append(d)
-            files = os.listdir(os.path.join(root,d))
-            for f in files:
-                # Load the image file
-                imgFile = os.path.join(root,d, f)
-                img = plt.imread(imgFile)
-                # The image array is a multidimensional numpy array
-                # - flatten it to a single array of pixel values for scikit-learn
-                # - and add it to the list of features
-                features.append(img.ravel())
-                
-                # Add it to the numpy array of labels
-                labels = np.append(labels, class_id )
-            class_id  += 1
-            
-    # Convert the list of features into a numpy array
-    features = np.array(features)
-    
-    return features, labels, classnames
-
-# The images are in a folder named 'shapes/training'
-training_folder_name = "../training_data/training"
-
-# Prepare the image data
-features, labels, classnames = prep_data(training_folder_name)
-
-# split into training and testing sets
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import f1_score
+from sklearn.metrics import accuracy_score
+from sklearn.metrics import confusion_matrix
 
-X_train, X_val, y_train, y_val = train_test_split(features, labels, test_size=0.30)
+from sklearn.ensemble import VotingClassifier
+from sklearn.ensemble import StackingClassifier
+from sklearn.model_selection import cross_val_score
+
+"""
+Crée une classe ImageClassifier qui fait office d'"usine" à modèle
+La classe prend des données X et des données y, propose une division, en-
+-registre plusieurs modèles, fait fitter les données, prédit les
+données et propose comme options le calcul du score des différents modèles
+"""
+
+class ImageClassifier:
+    def __init__(self, X_train, y_train, X_test=None, y_test=None):
+        self.X_train = X_train
+        self.y_train = y_train
+        self.X_test = X_test
+        self.y_test = y_test
+        self.clfs = {}
+    def split_set(self, n, r=None):
+        self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(features, labels, test_size=n, random_state=r)
+    def add_classifier(self, clf):
+        if type(clf) is list:
+            for c in clf:
+                self.clfs[c.__class__.__name__] = c
+                print(f"{c.__class__.__name__} model added")
+            return f"Added {len(clf)} models."
+        else:
+            self.clfs[clf.__class__.__name__] = clf
+            return f"{clf.__class__.__name__} model added."
+    def fit_data(self):
+        for name in self.clfs.keys():
+            self.clfs[name].fit(self.X_train, self.y_train)
+            print(f"Fitting data on {name} model done.")
+    def predict_data(self):
+        try:
+            y_pred = {name: self.clfs[name].predict(self.X_test) for name in self.clfs.keys()}
+        except:
+            print("Error. Use the `fit_data` method to first fit all data on the model before predicting")
+        return y_pred
+    def predict_proba_data(self):
+        try:
+            y_prob = {name: self.clfs[name].predict_proba(self.X_test) for name in self.clfs.keys()}
+        except:
+            print("Error. Use the `fit_data` method to first fit all data on the model before predicting")
+        return y_prob
+    def accuracy_score(self, y_pred):
+        return {name: accuracy_score(self.y_test, y_pred[name]) for name in y_pred.keys()}
+    def f1_score(self, y_pred):
+        return {name: f1_score(self.y_test, y_pred[name]) for name in y_pred.keys()}
+    def clf_metrics(self, y_pred):
+        return {name: confusion_matrix(self.y_test, y_pred[name]) for name in y_pred.keys()}
+    def ensembler(self, method='voting'):
+        if method=='voting':
+            vot_clf = VotingClassifier(estimators=[(name, self.clfs[name]) for name in self.clfs.keys()])
+            vot_clf.fit(self.X_train, self.y_train)
+            return vot_clf
+        if method=='stacking':
+            stack_clf = StackingClassifier(estimators=[(name, self.clfs[name]) for name in self.clfs.keys()])
+            stack_clf.fit(self.X_train, self.y_train)
+            return stack_clf
+    def test_raw_predictor(self):
+        for name in self.clfs.keys():
+            model = self.clfs[name]
+            cv_scores = cross_val_score(model, X_train, y_train, cv=10, n_jobs = -1)
+            print(str(item).split("(")[0], "Scores:", cv_scores)
+            print(str(item).split("(")[0], "Mean:", cv_scores.mean())
+            print(str(item).split("(")[0], "Standard deviation:", cv_scores.std())  
+            print("\n")

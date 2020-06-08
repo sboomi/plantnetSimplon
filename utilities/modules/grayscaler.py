@@ -6,38 +6,14 @@ the ../training_data/training folder, retaining the same structure of subfolders
 for each category of image.
 """
 
-src_folder = "../training_data/raw"
-train_folder = "../training_data/training"
-
 import os
 import shutil
 import numpy as np
 import matplotlib.pyplot as plt
 from PIL import Image
+import directories
 
 import concurrent.futures
-
-# # Loop through each subfolder in the input folder
-# for root, folders, files in os.walk(src_folder):
-#     for sub_folder in folders:
-#         print('processing folder ' + sub_folder)
-#         # Create a matching subfolder in the output dir
-#         save_folder = os.path.join(train_folder,sub_folder)
-#         if not os.path.exists(save_folder):
-#             os.makedirs(save_folder)
-#         # Loop through the files in the subfolder
-#         file_names = os.listdir(os.path.join(root,sub_folder))
-#         for file_name in file_names:
-#             # Open the file
-#             file_path = os.path.join(root,sub_folder, file_name)
-#             #print("reading " + file_path)
-#             image = Image.open(file_path)
-#             # Create a gray version and save it using PIL's 
-#             # luminosity method
-#             gray_image = image.convert('L')
-#             save_as = os.path.join(save_folder, file_name)
-#             #print("writing " + save_as)
-#             gray_image.save(save_as)
 
 def grayscale_img_folder(sub_folder):
     print('processing folder ' + sub_folder)
@@ -60,7 +36,7 @@ def grayscale_img_folder(sub_folder):
         #print("writing " + save_as)
         gray_image.save(save_as)
 
-def main():
+def main(src_folder="../training_data/raw",train_folder="../training_data/training"):
     # Create the output folder if it doesn't already exist
     if os.path.exists(train_folder):
         shutil.rmtree(train_folder)
@@ -77,4 +53,4 @@ def main():
     
 
 if __name__=='__main__':
-    main()
+    main(directories.SRC_FOLDER, directories.TRAIN_FOLDER)
