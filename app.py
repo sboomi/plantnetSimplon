@@ -87,7 +87,7 @@ def interprocessing():
     analysis_results = session['analysis_results']
     file_urls = session['file_urls']
 
-    analyze(file_urls)
+    analysis_results = analyze(file_urls)
 
     session['analysis_results'] = analysis_results
     return "Results done!"
