@@ -47,8 +47,13 @@ def get_dump(upload_folder):
 
     for f in list_img:
         img_file = os.path.join(upload_folder, f)
-        img = Image.open(imgFile)
+        img = Image.open(img_file)
         img = np.asarray(img)
         f_dump.append(img.ravel())
 
+    f_dump = np.array(f_dump)
     return f_dump
+
+def get_labels(upload_folder):
+    list_names = os.listdir(upload_folder)
+    return np.array(list(range(len(list_names)))), np.array(list_names) 

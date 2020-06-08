@@ -1,4 +1,5 @@
 import pickle
+import numpy as np
 import os
 
 from PIL import Image, ImageOps
@@ -13,16 +14,20 @@ Fonction qui appelle les imges contenues dans le dossier /uploads et les fait pa
 dans un algorithme de classification.
 """
 
-ROOT_DIR = '../'
-UPLOADS_FOLDER = f"{ROOT_DIR}uploads"
-TEST_FOLDER = f"{ROOT_DIR}uploads/training"
-SRC_FOLDER = f"{ROOT_DIR}utilities/training_data/raw"
+# ROOT_DIR = '../'
+# UPLOADS_FOLDER = f"{ROOT_DIR}uploads"
+# TEST_FOLDER = f"{ROOT_DIR}uploads/training"
+# SRC_FOLDER = f"{ROOT_DIR}utilities/training_data/raw"
+
+UPLOADS_FOLDER = "uploads"
+TEST_FOLDER = "uploads/training"
+SRC_FOLDER = "utilities/training_data/raw"
 
 #A changer en fonction du modèle final
-MODEL = "model.pkl"
+MODEL = "utilities/plantnet_model.pkl"
 
 def reduce_features(X, n):
-    pca = PCA(n_components=n)
+    pca = PCA(n_components=n, svd_solver='randomized', whiten=True)
     scaler = StandardScaler().fit(X)
     Z = scaler.transform(X)
     pca.fit(Z)
@@ -35,7 +40,7 @@ def resize_image(folder):
         curr_img = Image.open(img_path)
         target_size = (150, 150)
         curr_img = curr_img.resize(target_size)
-        curr_img.saveas(img_path)
+        curr_img.save(img_path)
 
 
 
@@ -50,16 +55,20 @@ def analyze(file_urls):
     nobg.dump_process(UPLOADS_FOLDER, TEST_FOLDER)
     X =il.get_dump(TEST_FOLDER)
     #Get available classnames
-    _, y, y_names = il.prep_data(SRC_FOLDER)
+    y, y_names = il.get_labels(SRC_FOLDER)
 
     #Optional: use PCA
-    #X = reduce_features(X, 0.77)
+    if X.shape[0] >=150 :
+        X = reduce_features(X, 150)
+    else:
+        X = np.sort(X)[:,::-1][:,:150]   
 
     #Classifier
     # Comes with a trained classifier
     #Using the pickle module
     clf_pkl = open(MODEL,'rb')
     clf = pickle.load(clf_pkl)
+    clf_pkl.close()
 
     #Prediction
     #Returns something with predictions (list of names, dictionnaries...)
@@ -67,5 +76,5 @@ def analyze(file_urls):
 
     #Optional: compute scores
 
-    #return [y_names[i] for i in y_pred]
-    return ["Null"] * len(file_urls)
+    return [y_names[i] for i in y_pred]
+    #return ["Null"] * len(file_urls)

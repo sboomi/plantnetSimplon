@@ -61,7 +61,7 @@ def img_process(src_folder=SRC_FOLDER, train_folder=TRAIN_FOLDER_NO_BG):
 
 def dump_process(src_folder, train_folder):
     list_img = os.listdir(src_folder)
-    save_folder = os.path.join(train_folder,sub_folder)
+    save_folder = train_folder
     if not os.path.exists(save_folder):
         os.makedirs(save_folder)
     for file_name in list_img:
