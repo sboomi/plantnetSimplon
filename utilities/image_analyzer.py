@@ -1,5 +1,7 @@
 import pickle
+import os
 
+from PIL import Image, ImageOps
 from sklearn.preprocessing import StandardScaler     
 from sklearn.decomposition import PCA
 
@@ -26,9 +28,24 @@ def reduce_features(X, n):
     pca.fit(Z)
     return pca.transform(Z)
 
+def resize_image(folder):
+    list_img = os.listdir(folder)
+    for img in list_img:
+        img_path = os.path.join(folder,img)
+        curr_img = Image.open(img_path)
+        target_size = (150, 150)
+        curr_img = curr_img.resize(target_size)
+        curr_img.saveas(img_path)
+
+
+
 def analyze(file_urls):
 
     #Preprocessing
+
+    #Resize pictures
+    resize_image(UPLOADS_FOLDER)
+
     ## Remove background
     nobg.dump_process(UPLOADS_FOLDER, TEST_FOLDER)
     X =il.get_dump(TEST_FOLDER)
