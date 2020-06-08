@@ -4,6 +4,8 @@ from flask import Flask, render_template, request, redirect, session, url_for
 from flask_dropzone import Dropzone
 from flask_uploads import UploadSet, configure_uploads, IMAGES, patch_request_class
 
+from utilities.image_analyzer import analyze
+
 app = Flask(__name__)
 dropzone = Dropzone(app)
 
@@ -79,6 +81,20 @@ def index():
     # Renvoie à la page avec la dropzone   
     return render_template('index.html')
 
+def interprocessing():
+    if "analysis_results" not in session:
+        session["analysis_results"] = []
+    analysis_results = session['analysis_results']
+    file_urls = session['file_urls']
+
+    analyze(file_urls)
+
+    session['analysis_results'] = analysis_results
+    return "Results done!"
+
+
+
+
 
 @app.route('/results')
 def results():
@@ -90,8 +106,11 @@ def results():
     # Règle la variable file_urls et retire la session en cours
     file_urls = session['file_urls']
     session.pop('file_urls', None)
+
+    analysis_results = session['analysis_results']
+    session.pop('analysis_results', None)
     
-    return render_template('results.html', file_urls=file_urls)
+    return render_template('results.html', file_urls=file_urls, analysis_results=analysis_results)
 
 # Active le debug
 if __name__ == "__main__":
