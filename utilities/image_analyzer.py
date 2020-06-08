@@ -14,6 +14,7 @@ dans un algorithme de classification.
 ROOT_DIR = '../'
 UPLOADS_FOLDER = f"{ROOT_DIR}uploads"
 TEST_FOLDER = f"{ROOT_DIR}uploads/training"
+SRC_FOLDER = f"{ROOT_DIR}utilities/training_data/raw"
 
 #A changer en fonction du modèle final
 MODEL = "model.pkl"
@@ -30,7 +31,9 @@ def analyze(file_urls):
     #Preprocessing
     ## Remove background
     nobg.img_process(UPLOADS_FOLDER, TEST_FOLDER)
-    X, y, y_names =il.prep_data(TEST_FOLDER)
+    X =il.get_dump(TEST_FOLDER)
+    #Get available classnames
+    _, y, y_names = il.prep_data(SRC_FOLDER)
 
     #Optional: use PCA
     #X = reduce_features(X, 0.77)

@@ -40,3 +40,15 @@ def prep_data (folder, grayscale=False):
     features = np.array(features)
     
     return features, labels, classnames
+
+def get_dump(upload_folder):
+    list_img = os.listdir(upload_folder)
+    f_dump = []
+
+    for f in list_img:
+        img_file = os.path.join(upload_folder, f)
+        img = Image.open(imgFile)
+        img = np.asarray(img)
+        f_dump.append(img.ravel())
+
+    return f_dump
