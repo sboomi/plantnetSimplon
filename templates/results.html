@@ -7,16 +7,19 @@
     <title>Plantnet | Résultats</title>
 </head>
 <body>
-    <h1 class="text-center">Voilà le résultat !</h1>
-    <a href="{{ url_for('index') }}">Back</a><p>
+    <div class="container-fluid">
+        <h1 class="text-center">Voilà le résultat !</h1>
+        <a href="{{ url_for('index') }}">Back</a><p>
         <div class="row">
         {% for file_url, result in dict_result.items() %}
-        <div class="col-xs-4">
-            <img style="height: 150px" src="{{ file_url }}"> <br>
-            <p>{{ result }}</p>
-        </div>
+            <div class="col-xs-4">
+                <img style="height: 150px" src="{{ file_url }}"> <br>
+                <p>{{ result }}</p>
+            </div>
         {% endfor %}
         </div>
+    </div>
+    
 
 </body>
 

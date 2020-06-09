@@ -9,6 +9,14 @@ from sklearn.decomposition import PCA
 import utilities.modules.remove_bg as nobg
 import utilities.modules.image_loader as il
 
+FLOWER_NAMES = [
+    'Cichorium intybus L.',
+    'Leucanthemum vulgare (Vaill.) Lam.',
+    'Malva sylvestris L.'
+    'Papaver rhoeas L.',
+    'Ranunculus bulbosus L.',
+]
+
 """
 Fonction qui appelle les imges contenues dans le dossier /uploads et les fait passer
 dans un algorithme de classification.
@@ -33,16 +41,32 @@ def reduce_features(X, n):
     pca.fit(Z)
     return pca.transform(Z)
 
+
+
+def resized_image(src_image, size=(200,200), bg_color="white"): 
+    
+    # resize the image so the longest dimension matches our target size
+    src_image.thumbnail(size, Image.ANTIALIAS)
+    
+    # Create a new square background image
+    new_image = Image.new("RGB", size, bg_color)
+    
+    # Paste the resized image into the center of the square background
+    new_image.paste(src_image, (int((size[0] - src_image.size[0]) / 2), int((size[1] - src_image.size[1]) / 2)))
+    # return the resized image
+    return new_image
+    
 def resize_image(folder):
+    """
+    Prend l'image chargée et la redimensionne à 150x150
+    """
     list_img = os.listdir(folder)
     for img in list_img:
         img_path = os.path.join(folder,img)
         curr_img = Image.open(img_path)
         target_size = (150, 150)
-        curr_img = curr_img.resize(target_size)
+        curr_img = resized_image(curr_img.copy(), target_size, "black")
         curr_img.save(img_path)
-
-
 
 def analyze(file_urls, model):
 
@@ -55,13 +79,14 @@ def analyze(file_urls, model):
     nobg.dump_process(UPLOADS_FOLDER, TEST_FOLDER)
     X =il.get_dump(TEST_FOLDER)
     #Get available classnames
-    y, y_names = il.get_labels(SRC_FOLDER)
+    y_names = np.array(FLOWER_NAMES)
+    y = np.array(list(range(len(y_names))))
 
-    #Optional: use PCA
-    if X.shape[0] >=150 :
-        X = reduce_features(X, 150)
-    else:
-        X = np.sort(X)[:,::-1][:,:150]   
+    # #Optional: use PCA
+    # if X.shape[0] >=150 :
+    #     X = reduce_features(X, 150)
+    # else:
+    #     X = np.sort(X)[:,::-1][:,:150]   
 
     #Classifier
     #Prediction
@@ -69,6 +94,5 @@ def analyze(file_urls, model):
     y_pred = model.predict(X)
 
     #Optional: compute scores
-
-    return [y_names[i] for i in y_pred]
+    return list(y_names[y_pred.astype(int)])
     #return ["Null"] * len(file_urls)

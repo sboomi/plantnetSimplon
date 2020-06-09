@@ -1,5 +1,5 @@
 import os
-import pickle
+from joblib import load
 
 from flask import Flask, render_template, request, redirect, session, url_for
 from flask_dropzone import Dropzone
@@ -13,9 +13,7 @@ dropzone = Dropzone(app)
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))     
 # set file directory path
 
-file_stream = open('utilities/plantnet_model.pkl', 'rb')
-clf = pickle.load(file_stream)
-file_stream.close()
+pipeline = load('utilities/pipeline_model.joblib') 
 
 """
 BUT DE L'APPLICATION
@@ -110,7 +108,7 @@ def results():
         return redirect(url_for('index'))
 
     print("Processing pictures.")   
-    interprocessing(clf)
+    interprocessing(pipeline)
     # Règle la variable file_urls et retire la session en cours
     file_urls = session['file_urls']
     session.pop('file_urls', None)
