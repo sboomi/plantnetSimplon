@@ -1,4 +1,5 @@
 import os
+import pickle
 
 from flask import Flask, render_template, request, redirect, session, url_for
 from flask_dropzone import Dropzone
@@ -8,6 +9,13 @@ from utilities.image_analyzer import analyze
 
 app = Flask(__name__)
 dropzone = Dropzone(app)
+
+APP_ROOT = os.path.dirname(os.path.abspath(__file__))     
+# set file directory path
+
+file_stream = open('utilities/plantnet_model.pkl', 'rb')
+clf = pickle.load(file_stream)
+file_stream.close()
 
 """
 BUT DE L'APPLICATION
@@ -81,13 +89,13 @@ def index():
     # Renvoie à la page avec la dropzone   
     return render_template('index.html')
 
-def interprocessing():
+def interprocessing(model):
     if "analysis_results" not in session:
         session["analysis_results"] = []
     analysis_results = session['analysis_results']
     file_urls = session['file_urls']
 
-    analysis_results = analyze(file_urls)
+    analysis_results = analyze(file_urls, model)
 
     session['analysis_results'] = analysis_results
     return "Results done!"
@@ -102,7 +110,7 @@ def results():
         return redirect(url_for('index'))
 
     print("Processing pictures.")   
-    interprocessing()
+    interprocessing(clf)
     # Règle la variable file_urls et retire la session en cours
     file_urls = session['file_urls']
     session.pop('file_urls', None)

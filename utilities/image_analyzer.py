@@ -44,7 +44,7 @@ def resize_image(folder):
 
 
 
-def analyze(file_urls):
+def analyze(file_urls, model):
 
     #Preprocessing
 
@@ -64,15 +64,9 @@ def analyze(file_urls):
         X = np.sort(X)[:,::-1][:,:150]   
 
     #Classifier
-    # Comes with a trained classifier
-    #Using the pickle module
-    clf_pkl = open(MODEL,'rb')
-    clf = pickle.load(clf_pkl)
-    clf_pkl.close()
-
     #Prediction
     #Returns something with predictions (list of names, dictionnaries...)
-    y_pred = clf.predict(X)
+    y_pred = model.predict(X)
 
     #Optional: compute scores
 
