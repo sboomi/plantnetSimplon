@@ -12,9 +12,9 @@ import utilities.modules.image_loader as il
 FLOWER_NAMES = [
     'Cichorium intybus L.',
     'Leucanthemum vulgare (Vaill.) Lam.',
-    'Malva sylvestris L.'
+    'Malva sylvestris L.',
     'Papaver rhoeas L.',
-    'Ranunculus bulbosus L.',
+    'Ranunculus bulbosus L.'
 ]
 
 """
