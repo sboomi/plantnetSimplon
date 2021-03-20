@@ -7,7 +7,7 @@ Flask-Dropzone==1.5.4
 Flask-Uploads==0.2.1
 idna==2.9
 itsdangerous==1.1.0
-Jinja2==2.11.2
+Jinja2==2.11.3
 joblib==0.15.1
 kiwisolver==1.2.0
 MarkupSafe==1.1.1
