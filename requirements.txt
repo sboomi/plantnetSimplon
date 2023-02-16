@@ -24,4 +24,4 @@ selenium==3.141.0
 six==1.15.0
 threadpoolctl==2.0.0
 urllib3==1.26.5
-Werkzeug==1.0.1
+Werkzeug==2.2.3
